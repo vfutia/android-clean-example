@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.vfutia.data.db.AppDatabase
-import com.vfutia.data.db.DataSourceImpl
+import com.vfutia.data.db.RoomDataSource
 import com.vfutia.data.db.ListDataDao
-import com.vfutia.data.network.ListDataService
+import com.vfutia.data.network.RestDataSource
 import com.vfutia.data.ListRepositoryImpl
 import com.vfutia.domain.DataSource
 import com.vfutia.domain.ListRepository
@@ -46,7 +46,7 @@ class DataModule {
             .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .client(client)
             .build()
-            .create(ListDataService::class.java)
+            .create(RestDataSource::class.java)
     }
 
     @Provides
@@ -64,7 +64,7 @@ class DataModule {
 
     @Provides
     @Named("persistence")
-    fun provideDataSource(listDataDao: ListDataDao): DataSource = DataSourceImpl(listDataDao)
+    fun provideDataSource(listDataDao: ListDataDao): DataSource = RoomDataSource(listDataDao)
 
     @Provides
     fun provideRepository(
