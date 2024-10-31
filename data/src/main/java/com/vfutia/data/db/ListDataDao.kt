@@ -1,4 +1,4 @@
-package com.vfutia.androidtesting.data.db
+package com.vfutia.data.db
 
 import androidx.room.Dao
 import androidx.room.Query

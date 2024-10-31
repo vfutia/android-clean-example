@@ -1,4 +1,7 @@
 plugins {
+    kotlin("kapt") version "2.0.21"
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.room)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
@@ -30,10 +33,19 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
     implementation(project(":domain"))
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.android)
+    kapt(libs.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.jackson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

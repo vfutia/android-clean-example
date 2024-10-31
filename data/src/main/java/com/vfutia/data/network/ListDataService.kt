@@ -1,4 +1,4 @@
-package com.vfutia.androidtesting.data.network
+package com.vfutia.data.network
 
 import com.vfutia.domain.DataSource
 import com.vfutia.domain.ListData

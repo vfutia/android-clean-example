@@ -1,6 +1,5 @@
 plugins {
     kotlin("kapt") version "2.0.21"
-    alias(libs.plugins.room)
     alias(libs.plugins.hilt)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -40,22 +39,17 @@ android {
     buildFeatures {
         compose = true
     }
-
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
 }
 
 dependencies {
     implementation(project(":presentation"))
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(libs.room.runtime)
+    implementation(libs.retrofit.jackson)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)
-    kapt(libs.room.compiler)
-    implementation(libs.room.runtime)
     implementation(libs.retrofit)
-    implementation(libs.retrofit.jackson)
     implementation(libs.retrofit.logging)
     implementation(libs.jackson.core)
     implementation(libs.jackson.annotations)

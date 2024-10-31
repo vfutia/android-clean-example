@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.vfutia.androidtesting.data.db.AppDatabase
-import com.vfutia.androidtesting.data.db.DataSourceImpl
-import com.vfutia.androidtesting.data.db.ListDataDao
-import com.vfutia.androidtesting.data.network.ListDataService
+import com.vfutia.data.db.AppDatabase
+import com.vfutia.data.db.DataSourceImpl
+import com.vfutia.data.db.ListDataDao
+import com.vfutia.data.network.ListDataService
 import com.vfutia.data.ListRepositoryImpl
 import com.vfutia.domain.DataSource
 import com.vfutia.domain.ListRepository
