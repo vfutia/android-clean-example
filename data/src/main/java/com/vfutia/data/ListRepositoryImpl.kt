@@ -6,30 +6,37 @@ import com.vfutia.domain.ListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ListRepositoryImpl(
-    private val dataSource: DataSource
+class ListRepositoryImpl (
+    private val persistence: DataSource,
+    private val network: DataSource
 ) : ListRepository {
     override suspend fun fetchList(): List<ListData> {
         return withContext(Dispatchers.IO) {
-            dataSource.fetchListData().ifEmpty {
-                listOf(
-                    ListData(
-                        name = "test",
-                        description = "just a test",
-                    ),
-                    ListData(
-                        name = "test2",
-                        description = "just a test",
-                    ),
-                    ListData(
-                        name = "test3",
-                        description = "just a test",
-                    ),
-                    ListData(
-                        name = "test4",
-                        description = "just a test",
-                    ),
-                )
+            try {
+                //I know this is going to fail, just want to make sure the
+                //plumbing for the network stuff works
+                network.fetchListData()
+            } catch (e: Exception) {
+                persistence.fetchListData().ifEmpty {
+                    listOf(
+                        ListData(
+                            name = "test",
+                            description = "just a test",
+                        ),
+                        ListData(
+                            name = "test2",
+                            description = "just a test",
+                        ),
+                        ListData(
+                            name = "test3",
+                            description = "just a test",
+                        ),
+                        ListData(
+                            name = "test4",
+                            description = "just a test",
+                        ),
+                    )
+                }
             }
         }
     }

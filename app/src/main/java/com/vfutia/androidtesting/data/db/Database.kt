@@ -1,4 +1,4 @@
-package com.vfutia.androidtesting.data
+package com.vfutia.androidtesting.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

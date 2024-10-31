@@ -28,6 +28,7 @@ class ListViewModel @Inject constructor(
             delay(2000)
             _state.update { current -> current.copy(list = list) }
         } catch (e: Exception) {
+            e.printStackTrace()
             _state.update { current -> current.copy(hasError = true) }
         } finally {
             _state.update { current -> current.copy(loading = false) }

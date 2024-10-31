@@ -2,9 +2,14 @@ package com.vfutia.androidtesting.di
 
 import android.content.Context
 import androidx.room.Room
-import com.vfutia.androidtesting.data.AppDatabase
-import com.vfutia.androidtesting.data.DataSourceImpl
-import com.vfutia.androidtesting.data.ListDataDao
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.vfutia.androidtesting.data.db.AppDatabase
+import com.vfutia.androidtesting.data.db.DataSourceImpl
+import com.vfutia.androidtesting.data.db.ListDataDao
+import com.vfutia.androidtesting.data.network.ListDataService
 import com.vfutia.data.ListRepositoryImpl
 import com.vfutia.domain.DataSource
 import com.vfutia.domain.ListRepository
@@ -13,10 +18,36 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.jackson.JacksonConverterFactory
+import javax.inject.Named
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DataModule {
+
+    @Provides
+    @Named("network")
+    fun provideService(): DataSource {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+
+        val objectMapper = ObjectMapper()
+            .registerKotlinModule()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
+
+        return Retrofit.Builder()
+            .baseUrl("https://fetch-hiring.s3.amazonaws.com/")
+            .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+            .client(client)
+            .build()
+            .create(ListDataService::class.java)
+    }
 
     @Provides
     fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -32,8 +63,12 @@ class DataModule {
     }
 
     @Provides
+    @Named("persistence")
     fun provideDataSource(listDataDao: ListDataDao): DataSource = DataSourceImpl(listDataDao)
 
     @Provides
-    fun provideRepository(dataSource: DataSource): ListRepository = ListRepositoryImpl(dataSource)
+    fun provideRepository(
+        @Named("persistence") persistence: DataSource,
+        @Named("network") network: DataSource
+    ): ListRepository = ListRepositoryImpl(persistence, network)
 }

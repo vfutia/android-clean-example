@@ -1,4 +1,4 @@
-package com.vfutia.androidtesting.data
+package com.vfutia.androidtesting.data.db
 
 import com.vfutia.domain.DataSource
 import com.vfutia.domain.ListData
