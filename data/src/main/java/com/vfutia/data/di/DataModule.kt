@@ -1,4 +1,4 @@
-package com.vfutia.androidtesting.di
+package com.vfutia.data.di
 
 import android.content.Context
 import androidx.room.Room
@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.vfutia.data.db.AppDatabase
-import com.vfutia.data.db.RoomDataSource
-import com.vfutia.data.db.ListDataDao
-import com.vfutia.data.network.RestDataSource
 import com.vfutia.data.ListRepositoryImpl
+import com.vfutia.data.db.AppDatabase
+import com.vfutia.data.db.ListDataDao
+import com.vfutia.data.db.RoomDataSource
+import com.vfutia.data.network.RestDataSource
 import com.vfutia.domain.DataSource
 import com.vfutia.domain.ListRepository
 import dagger.Module
@@ -24,14 +24,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import javax.inject.Named
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 class DataModule {
-
     @Provides
     @Named("network")
-    fun provideService(): DataSource {
+    internal fun provideService(): DataSource {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
@@ -50,7 +48,7 @@ class DataModule {
     }
 
     @Provides
-    fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
+    internal fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java, "database-name"
@@ -58,13 +56,13 @@ class DataModule {
     }
 
     @Provides
-    fun provideListDataDao(database: AppDatabase): ListDataDao {
+    internal fun provideListDataDao(database: AppDatabase): ListDataDao {
         return database.listDataDao()
     }
 
     @Provides
     @Named("persistence")
-    fun provideDataSource(listDataDao: ListDataDao): DataSource = RoomDataSource(listDataDao)
+    internal fun provideDataSource(listDataDao: ListDataDao): DataSource = RoomDataSource(listDataDao)
 
     @Provides
     fun provideRepository(

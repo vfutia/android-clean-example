@@ -6,7 +6,7 @@ import com.vfutia.domain.ListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ListRepositoryImpl (
+internal class ListRepositoryImpl (
     private val persistence: DataSource,
     private val network: DataSource
 ) : ListRepository {
