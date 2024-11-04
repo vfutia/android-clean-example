@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                         TopAppBar(
                             title = { Text(text = "Clean Architecture Demo") },
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                containerColor = MaterialTheme.colorScheme.primary,
                                 titleContentColor = MaterialTheme.colorScheme.onPrimary
                             )
                         )
